@@ -9,3 +9,7 @@ instance Algebras.SemiGroup [a] where
 instance Algebras.Monoid [a] where
   zero = []
   {-# INLINE zero #-}
+
+instance Algebras.SemiGroup Int where
+  (|+|) = (+)
+  {-# INLINE (|+|) #-}

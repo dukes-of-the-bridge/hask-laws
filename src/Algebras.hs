@@ -1,3 +1,16 @@
+{-|
+Module      : Algebras
+Description : Re writing of Algebra for training
+Copyright   : (c) Filippo Mariotti 2019
+                  MD Ortega 2019,
+                  Daniel Pires 2019
+License     : GPL-3
+Maintainer  :
+Stability   : experimental
+Portability : POSIX
+
+
+-}
 module Algebras where
 
 {-|
@@ -20,6 +33,8 @@ class SemiGroup a where
   ∃! e ∈ S , ∀ a ∈ S,  a ⊗ e = e ⊗ a = a
 
   The structure (S, ⊗, e) is a monoid.
+
+  A Monoid is a 'SemiGroup'
 -}
 
 class (SemiGroup a) => Monoid a where
