@@ -13,3 +13,8 @@ instance Algebras.Monoid [a] where
 instance Algebras.SemiGroup Int where
   (|+|) = (+)
   {-# INLINE (|+|) #-}
+
+instance Algebras.Functor [] where
+  fmap f = foldr (\a xs -> f(a) : xs) []
+
+
