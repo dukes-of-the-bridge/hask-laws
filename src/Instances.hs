@@ -17,4 +17,3 @@ instance Algebras.SemiGroup Int where
 instance Algebras.Functor [] where
   fmap f = foldr (\a xs -> f(a) : xs) []
 
-
