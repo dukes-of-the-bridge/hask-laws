@@ -2,8 +2,9 @@ module InstancesSpec (spec) where
 
 import Test.Hspec
 import Test.QuickCheck
-import Algebras
-import Instances
+import Algebra.Monoids
+import Algebra.SemiGroups
+
 
 spec :: Spec
 spec = do
@@ -35,10 +36,10 @@ classifyLists as = classify (foldr (\x b -> null x || b) False as) "empty list"
 {-|
   Set of Semigroup laws
 -}
-isHomomorphic :: (Algebras.SemiGroup a, Algebras.SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
+isHomomorphic :: (SemiGroup a, SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
 isHomomorphic h x y = h x |+| h y == h (x |+| y)
 
-isAssociative :: (Algebras.SemiGroup a, Eq a) => a -> a -> a -> Bool
+isAssociative :: (SemiGroup a, Eq a) => a -> a -> a -> Bool
 isAssociative xs ys zs =
       (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
         xs |+| (ys |+| zs) == xs |+| ys |+| zs
@@ -46,5 +47,5 @@ isAssociative xs ys zs =
 {-|
   Additional Monoid laws
 -}
-hasZero :: (Algebras.Monoid a, Eq a) => a -> Bool
+hasZero :: (Algebra.Monoids.Monoid a, Eq a) => a -> Bool
 hasZero a = zero |+| a == a |+| zero && zero |+| a == a
