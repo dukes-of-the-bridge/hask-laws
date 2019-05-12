@@ -1,7 +1,11 @@
-module Algebra.Monoid(Monoid(..)) where
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE InstanceSigs #-}
+
+module Algebra.Monoid(Monoid(..), MonoidLaws(..)) where
 
 import Prelude hiding(Semigroup(..), Monoid(..))
-import Algebra.Base(Monoid(..), SemiGroup(..))
+import Algebra.Base(Monoid(..), SemiGroup(..), MonoidLaws(..))
 import Algebra.SemiGroup
 
 instance Monoid [a] where
@@ -15,3 +19,5 @@ instance (Num a) => Monoid (Sum a) where
 instance (Num a) => Monoid (Product a) where
   zero = fromInteger 1
   {-# INLINE zero #-}
+
+instance (SemiGroup a, Monoid a, Eq a) => MonoidLaws a

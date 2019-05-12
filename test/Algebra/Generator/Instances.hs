@@ -9,5 +9,3 @@ instance Arbitrary a => Arbitrary (Sum a) where
 
 instance Arbitrary a => Arbitrary (Product a) where
   arbitrary = fmap Product arbitrary
-
-

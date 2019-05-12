@@ -45,17 +45,4 @@ classifyLists as = classify (foldr (\x b -> null x || b) False as) "empty list"
 --isHomomorphic :: (SemiGroup a, SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
 --isHomomorphic h x y = h x |+| h y == h (x |+| y)
 
-{-|
-  Set of Semigroup laws
--}
-isAssociative :: (SemiGroup a, Eq a) => a -> a -> a -> Bool
-isAssociative xs ys zs =
-      (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
-        xs |+| (ys |+| zs) == xs |+| ys |+| zs
-
-{-|
-  Additional Monoid laws
--}
-hasZero :: (Monoid a, Eq a) => a -> Bool
-hasZero a = zero |+| a == a |+| zero && zero |+| a == a
 

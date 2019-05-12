@@ -1,3 +1,5 @@
+{-# LANGUAGE DefaultSignatures #-}
+
 module Algebra.Base where
 
 import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
@@ -15,6 +17,13 @@ class SemiGroup a where
   (|+|) :: a -> a -> a
   {-# MINIMAL (|+|) #-}
 
+class (SemiGroup a) => SemiGroupLaws a where
+  isAssociative :: a -> a -> a -> Bool
+  default isAssociative :: (Eq a) => a -> a -> a -> Bool
+  isAssociative xs ys zs =
+        (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
+          xs |+| (ys |+| zs) == xs |+| ys |+| zs
+  {-# MINIMAL isAssociative #-}
 {-|
   given a set S
 
@@ -30,6 +39,13 @@ The structure (S, ⊗, e) is a monoid.
 class (SemiGroup a) => Monoid a where
   zero :: a
   {-# MINIMAL zero #-}
+
+class (Monoid a) => MonoidLaws a where
+  hasZero :: a -> Bool
+  default hasZero :: (SemiGroup a, Eq a) => a -> Bool
+  hasZero a = zero |+| a == a |+| zero && zero |+| a == a
+  {-# MINIMAL hasZero #-}
+  {-# INLINABLE hasZero #-}
 
 {-|
   A functor algebra describes the preservation of the structure of an effect

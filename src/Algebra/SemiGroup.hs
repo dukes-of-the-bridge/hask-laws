@@ -1,9 +1,14 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE InstanceSigs #-}
+
 module Algebra.SemiGroup(
-  SemiGroup(..), Sum(..), Product(..)
+  SemiGroup(..), SemiGroupLaws(..), Sum(..), Product(..)
 ) where
 
 import Prelude hiding (Semigroup(..))
-import Algebra.Base (SemiGroup(..))
+import Algebra.Base (SemiGroup(..), SemiGroupLaws(..))
+
 import Algebra.SemiGroup.Instances
 
 instance (Num a) => SemiGroup (Sum a) where
@@ -18,3 +23,4 @@ instance SemiGroup [a] where
   (|+|) = (++)
   {-# INLINE (|+|) #-}
 
+instance (SemiGroup a, Eq a) => SemiGroupLaws a
