@@ -1,44 +1,47 @@
-module InstancesSpec (spec) where
+module Algebra.MonoidSpec(spec) where
 
+import Prelude hiding (Monoid(..), Semigroup(..))
 import Test.Hspec
 import Test.QuickCheck
-import Algebra.Monoids
-import Algebra.SemiGroups
+import Algebra.SemiGroup
+import Algebra.Monoid
 
 
 spec :: Spec
 spec = do
-  spec_list_semigroup
+  spec_semigroup
   spec_list_monoid
 
-spec_list_semigroup :: Spec
-spec_list_semigroup =
-  describe "SemiGroup for Lists" $ do
-    it "close on list addition" $
-      property
-        (let checkLists :: (Arbitrary a, Show a) => ([a] -> [a] -> Bool) -> [a] -> [a] -> Property
-             checkLists prop xs ys = classifyLists [xs, ys] prop
-          in checkLists (isHomomorphic (length :: [Int] -> Int)))
-    it "validate associative laws" $
+
+spec_semigroup :: Spec
+spec_semigroup =
+  describe "Semigroup type class" $ do
+    it "validate associative laws for lists" $ do
       property
           (let checkLists :: (Arbitrary a, Show a) => ([a] -> [a] -> [a] -> Bool) -> [a] -> [a] -> [a] -> Property
                checkLists prop xs ys zs = classifyLists [xs, ys, zs] prop
            in checkLists (isAssociative :: [Int] -> [Int] -> [Int] -> Bool))
+--    it "validate associative laws for Sum Int" $ do
+--      property (isAssociative :: (Sum Int) -> (Sum Int) -> (Sum Int) -> Bool)
+
 
 spec_list_monoid :: Spec
-spec_list_monoid = describe "Monoid for Lists" $
-  it "have neutral element" $
+spec_list_monoid = describe "Monoid type class" $ do
+  it "has neutral element for list" $
     property (hasZero :: [Int] -> Bool)
+--  it "has neutral element for Sum Int" $
+--    property (hasZero :: Sum Int -> Bool)
 
 classifyLists :: (Testable prop) => [[a]] -> prop -> Property
 classifyLists as = classify (foldr (\x b -> null x || b) False as) "empty list"
 
+
+--isHomomorphic :: (SemiGroup a, SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
+--isHomomorphic h x y = h x |+| h y == h (x |+| y)
+
 {-|
   Set of Semigroup laws
 -}
-isHomomorphic :: (SemiGroup a, SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
-isHomomorphic h x y = h x |+| h y == h (x |+| y)
-
 isAssociative :: (SemiGroup a, Eq a) => a -> a -> a -> Bool
 isAssociative xs ys zs =
       (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
@@ -47,5 +50,5 @@ isAssociative xs ys zs =
 {-|
   Additional Monoid laws
 -}
-hasZero :: (Algebra.Monoids.Monoid a, Eq a) => a -> Bool
+hasZero :: (Monoid a, Eq a) => a -> Bool
 hasZero a = zero |+| a == a |+| zero && zero |+| a == a
