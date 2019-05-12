@@ -1,6 +1,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Algebra.SemiGroup.Instances(Sum(..), Product(..)) where
+import GHC.Generics
 
 newtype Sum a = Sum { getSum:: a} 
                 deriving ( Eq    
@@ -8,7 +10,8 @@ newtype Sum a = Sum { getSum:: a}
                          , Read
                          , Show
                          , Bounded
-                         , Num )
+                         , Num
+                         , Generic)
 
 newtype Product a = Product { getProduct:: a}
                     deriving ( Eq
@@ -16,4 +19,5 @@ newtype Product a = Product { getProduct:: a}
                              , Read
                              , Show
                              , Bounded
-                             , Num )
+                             , Num
+                             , Generic)
