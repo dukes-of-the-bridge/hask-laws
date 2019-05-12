@@ -1,4 +1,5 @@
-{-# LANGUAGE DefaultSignatures #-}
+{-| Allows the definition of further constraints on individual class methods.|-}
+{-# LANGUAGE ConstrainedClassMethods #-}
 
 module Algebra.Base where
 
@@ -18,11 +19,7 @@ class SemiGroup a where
   {-# MINIMAL (|+|) #-}
 
 class (SemiGroup a) => SemiGroupLaws a where
-  isAssociative :: a -> a -> a -> Bool
-  default isAssociative :: (Eq a) => a -> a -> a -> Bool
-  isAssociative xs ys zs =
-        (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
-          xs |+| (ys |+| zs) == xs |+| ys |+| zs
+  isAssociative :: (Eq a) => a -> a -> a -> Bool
   {-# MINIMAL isAssociative #-}
 {-|
   given a set S
@@ -41,11 +38,8 @@ class (SemiGroup a) => Monoid a where
   {-# MINIMAL zero #-}
 
 class (Monoid a) => MonoidLaws a where
-  hasZero :: a -> Bool
-  default hasZero :: (SemiGroup a, Eq a) => a -> Bool
-  hasZero a = zero |+| a == a |+| zero && zero |+| a == a
+  hasZero :: (SemiGroup a, Eq a) => a -> Bool
   {-# MINIMAL hasZero #-}
-  {-# INLINABLE hasZero #-}
 
 {-|
   A functor algebra describes the preservation of the structure of an effect

@@ -23,4 +23,8 @@ instance SemiGroup [a] where
   (|+|) = (++)
   {-# INLINE (|+|) #-}
 
-instance (SemiGroup a, Eq a) => SemiGroupLaws a
+instance (SemiGroup a, Eq a) => SemiGroupLaws a where
+  isAssociative ::  (Eq a) => a -> a -> a -> Bool
+  isAssociative xs ys zs =
+        (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
+          xs |+| (ys |+| zs) == xs |+| ys |+| zs

@@ -20,4 +20,7 @@ instance (Num a) => Monoid (Product a) where
   zero = fromInteger 1
   {-# INLINE zero #-}
 
-instance (SemiGroup a, Monoid a, Eq a) => MonoidLaws a
+instance (Monoid a, SemiGroup a, Eq a) => MonoidLaws a where
+    hasZero :: (SemiGroup a, Eq a) => a -> Bool
+    hasZero a = zero |+| a == a |+| zero && zero |+| a == a
+    {-# INLINABLE hasZero #-}
