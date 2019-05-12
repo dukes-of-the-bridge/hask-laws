@@ -1,6 +1,3 @@
-{-| Allows the definition of further constraints on individual class methods.|-}
-{-# LANGUAGE ConstrainedClassMethods #-}
-
 module Algebra.Base where
 
 import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
@@ -19,7 +16,7 @@ class SemiGroup a where
   {-# MINIMAL (|+|) #-}
 
 class (SemiGroup a) => SemiGroupLaws a where
-  isAssociative :: (Eq a) => a -> a -> a -> Bool
+  isAssociative :: a -> a -> a -> Bool
   {-# MINIMAL isAssociative #-}
 {-|
   given a set S
@@ -38,7 +35,7 @@ class (SemiGroup a) => Monoid a where
   {-# MINIMAL zero #-}
 
 class (Monoid a) => MonoidLaws a where
-  hasZero :: (SemiGroup a, Eq a) => a -> Bool
+  hasZero :: a -> Bool
   {-# MINIMAL hasZero #-}
 
 {-|

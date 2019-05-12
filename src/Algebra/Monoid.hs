@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE InstanceSigs #-}
 
 module Algebra.Monoid(Monoid(..), MonoidLaws(..)) where
 
@@ -20,7 +19,6 @@ instance (Num a) => Monoid (Product a) where
   zero = fromInteger 1
   {-# INLINE zero #-}
 
-instance (Monoid a, SemiGroup a, Eq a) => MonoidLaws a where
-    hasZero :: (SemiGroup a, Eq a) => a -> Bool
+instance (Monoid a, Eq a) => MonoidLaws a where
     hasZero a = zero |+| a == a |+| zero && zero |+| a == a
     {-# INLINABLE hasZero #-}
