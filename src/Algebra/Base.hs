@@ -57,7 +57,8 @@ class Functor f where
 
 class (Functor f) => FunctorLaw f where
   mapId ::  (Eq (f a)) => f a -> Bool
-  {-# minimal mapId #-}
+  mapCompose::(Eq (f c)) => (a -> b) -> (b -> c) -> f a -> Bool
+  {-# minimal mapId, mapCompose #-}
   
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
