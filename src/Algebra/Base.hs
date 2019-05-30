@@ -1,3 +1,5 @@
+{-# LANGUAGE ConstrainedClassMethods #-}
+
 module Algebra.Base where
 
 import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
@@ -53,9 +55,10 @@ class Functor f where
   {-# MINIMAL fmap #-}
   lift = fmap
 
-instance Functor [] where
-  fmap f = foldr (\a xs -> f(a) : xs) []
-
+class (Functor f) => FunctorLaw f where
+  mapId ::  (Eq (f a)) => f a -> Bool
+  {-# minimal mapId #-}
+  
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
   a Kleisli construct a -> m b
