@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Algebra.Functor() where
+module Algebra.Functor(Functor(..), FunctorLaws(..)) where
 
 import Prelude hiding(Functor(..))
-import Algebra.Base(Functor(..), FunctorLaw(..))
+import Algebra.Base(Functor(..), FunctorLaws(..))
 
 instance Functor [] where
   fmap f = foldr (\a xs -> f(a) : xs) []
@@ -15,7 +15,7 @@ instance Functor Maybe where
   fmap f (Just a) = Just (f a)
   {-# INLINABLE fmap #-}
 
-instance (Functor f) => FunctorLaw f where
+instance (Functor f) => FunctorLaws f where
   mapId fa = fmap id fa == id fa
   mapCompose f g fa = fmap (g . f) fa == (fmap g . fmap f $ fa)
   {-# INLINABLE mapId #-}

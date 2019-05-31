@@ -3,7 +3,7 @@ module Algebra.FunctorSpec(spec) where
 import Prelude hiding (Functor(..))
 import Test.Hspec
 import Test.QuickCheck
-import Algebra.Base(Functor(..), FunctorLaw(..))
+import Algebra.Base(Functor(..), FunctorLaws(..))
 import Algebra.Functor
 
 

@@ -55,7 +55,7 @@ class Functor f where
   {-# MINIMAL fmap #-}
   lift = fmap
 
-class (Functor f) => FunctorLaw f where
+class (Functor f) => FunctorLaws f where
   mapId ::  (Eq (f a)) => f a -> Bool
   mapCompose::(Eq (f c)) => (a -> b) -> (b -> c) -> f a -> Bool
   {-# minimal mapId, mapCompose #-}
@@ -81,9 +81,7 @@ class (Functor m) => Monad m where
   flatten :: m (m a) -> m a
   pure :: a -> m a
   bind ma k = flatten . fmap k $ ma
-  flatten mma = bind mma id
   (>>=) = bind
   {-# INLINABLE bind #-}
-  {-# INLINABLE flatten #-}
   {-# INLINE (>>=) #-}
-  {-# MINIMAL pure , (bind | flatten) #-}
+  {-# MINIMAL pure , bind  #-}
