@@ -85,7 +85,7 @@ class (Functor m) => Monad m where
   (>>=) = bind
   {-# INLINABLE bind #-}
   {-# INLINE (>>=) #-}
-  {-# MINIMAL pure , bind  #-}
+  {-# MINIMAL pure , flatten  #-}
 
 class MonadLaws where
   leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
