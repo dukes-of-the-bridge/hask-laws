@@ -18,9 +18,9 @@ class SemiGroup a where
   (|+|) :: a -> a -> a
   {-# MINIMAL (|+|) #-}
 
-class (SemiGroup a) => SemiGroupLaws a where
-  isAssociative :: a -> a -> a -> Bool
-  {-# MINIMAL isAssociative #-}
+class SemiGroupLaws where
+  associativeSG :: (Eq a, SemiGroup a) => a -> a -> a -> Bool
+  {-# MINIMAL associativeSG #-}
 {-|
   given a set S
 
@@ -37,8 +37,8 @@ class (SemiGroup a) => Monoid a where
   zero :: a
   {-# MINIMAL zero #-}
 
-class (Monoid a) => MonoidLaws a where
-  hasZero :: a -> Bool
+class MonoidLaws where
+  hasZero :: (Eq a, Monoid a) => a -> Bool
   {-# MINIMAL hasZero #-}
 
 {-|
@@ -56,9 +56,9 @@ class Functor f where
   {-# MINIMAL fmap #-}
   lift = fmap
 
-class (Functor f) => FunctorLaws f where
-  mapId ::  (Eq (f a)) => f a -> Bool
-  mapCompose::(Eq (f c)) => (a -> b) -> (b -> c) -> f a -> Bool
+class FunctorLaws where
+  mapId ::  (Eq (f a), Functor f) => f a -> Bool
+  mapCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
   {-# minimal mapId, mapCompose #-}
   
 {-|

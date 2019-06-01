@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Algebra.SemiGroup(
   SemiGroup(..), SemiGroupLaws(..), Sum(..), Product(..)
@@ -22,8 +21,8 @@ instance SemiGroup [a] where
   (|+|) = (++)
   {-# INLINE (|+|) #-}
 
-instance (SemiGroup a, Eq a) => SemiGroupLaws a where
-  isAssociative xs ys zs =
+instance SemiGroupLaws  where
+  associativeSG xs ys zs =
         (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
           xs |+| (ys |+| zs) == xs |+| ys |+| zs
-  {-# INLINABLE isAssociative #-}
+  {-# INLINABLE associativeSG #-}

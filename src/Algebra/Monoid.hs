@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Algebra.Monoid(Monoid(..), MonoidLaws(..)) where
 
@@ -19,6 +18,6 @@ instance (Num a) => Monoid (Product a) where
   zero = fromInteger 1
   {-# INLINE zero #-}
 
-instance (Monoid a, Eq a) => MonoidLaws a where
-    hasZero a = zero |+| a == a |+| zero && zero |+| a == a
-    {-# INLINABLE hasZero #-}
+instance MonoidLaws  where
+  hasZero a = zero |+| a == a |+| zero && zero |+| a == a
+  {-# INLINABLE hasZero #-}

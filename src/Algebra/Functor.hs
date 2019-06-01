@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Algebra.Functor(Functor(..), FunctorLaws(..)) where
 
@@ -15,7 +14,7 @@ instance Functor Maybe where
   fmap f (Just a) = Just (f a)
   {-# INLINABLE fmap #-}
 
-instance (Functor f) => FunctorLaws f where
+instance FunctorLaws where
   mapId fa = fmap id fa == id fa
   mapCompose f g fa = fmap (g . f) fa == (fmap g . fmap f $ fa)
   {-# INLINABLE mapId #-}

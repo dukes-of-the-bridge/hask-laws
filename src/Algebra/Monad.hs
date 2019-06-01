@@ -9,6 +9,8 @@ import Algebra.Functor
 instance Monad [] where
   pure a    = [a]
   flatten   = foldr (++) []
+  {-# INLINABLE pure #-}
+  {-# INLINABLE flatten #-}
 
 instance MonadLaws where
   leftId f a = (pure a >>= f) == f a
@@ -16,3 +18,4 @@ instance MonadLaws where
   associativeM f g a = (pure a >>= f >>= g) == (pure a >>= (\a -> f a >>= g))
   {-# INLINABLE leftId #-}
   {-# INLINABLE rightId #-}
+  {-# INLINABLE associativeM #-}
