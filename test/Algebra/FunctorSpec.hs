@@ -13,19 +13,15 @@ spec = do
   spec_composition
 
 spec_map_id :: Spec
-spec_map_id  = describe "Functor" $ do
-   it "maps identity function for Lists" $
+spec_map_id  = describe "Functor Laws" $ do
+   it "should preserve identity function for Lists" $
      property (mapId :: [Int] -> Bool)
-   it "maps identity function for Maybe" $
+   it "should preserve function for Maybe" $
      property (mapId :: Maybe Int -> Bool)
 
 spec_composition::Spec
-spec_composition = describe "Functor" $ do
-  it "map composition for lists" $
-    property (mapCompose bySeven show :: [Int] -> Bool)
-  it "map composition for lists" $
-    property (mapCompose bySeven show :: Maybe Int -> Bool)
-
-
-bySeven :: (Num n) => n -> n
-bySeven = (*) 7
+spec_composition = describe "Functor Laws" $ do
+  it "should preserve composition for lists" $
+    property (mapCompose (7 *) show :: [Int] -> Bool)
+  it "should preserve composition for lists" $
+    property (mapCompose (7 *) show :: Maybe Int -> Bool)

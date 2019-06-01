@@ -12,6 +12,13 @@ instance Monad [] where
   {-# INLINABLE pure #-}
   {-# INLINABLE flatten #-}
 
+instance Monad Maybe where
+  pure = Just
+  flatten (Just (Just a)) = Just a
+  flatten _               = Nothing
+  {-# INLINE pure #-}
+  {-# INLINABLE flatten #-}
+
 instance MonadLaws where
   leftId f a = (pure a >>= f) == f a
   rightId ma = (ma >>= pure) == ma

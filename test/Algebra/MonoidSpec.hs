@@ -15,19 +15,19 @@ spec = do
 
 spec_semigroup :: Spec
 spec_semigroup =
-  describe "Semigroup type class" $ do
-    it "validate associative laws for lists" $
+  describe "Semigroup Laws" $ do
+    it "should verify associativity for List" $
       property
           (let checkLists :: (Arbitrary a, Show a) => ([a] -> [a] -> [a] -> Bool) -> [a] -> [a] -> [a] -> Property
                checkLists prop xs ys zs = classifyLists [xs, ys, zs] prop
            in checkLists (associativeSG :: [Int] -> [Int] -> [Int] -> Bool))
-    it "validate associative laws for Sum Int" $
+    it "should verify associativity for Sum Int" $
       property (associativeSG :: Sum Int -> Sum Int -> Sum Int -> Bool)
-    it "validate associative laws for Product Int" $
+    it "should verify associativity for Product Int" $
       property (associativeSG :: Product Int -> Product Int -> Product Int -> Bool)
 
 spec_monoid :: Spec
-spec_monoid = describe "Monoid type class" $ do
+spec_monoid = describe "Monoid Laws" $ do
   it "has neutral element for list" $
     property (hasZero :: [Int] -> Bool)
   it "has neutral element for Sum Int" $
@@ -37,9 +37,3 @@ spec_monoid = describe "Monoid type class" $ do
 
 classifyLists :: (Testable prop) => [[a]] -> prop -> Property
 classifyLists as = classify (foldr (\x b -> null x || b) False as) "empty list"
-
-
---isHomomorphic :: (SemiGroup a, SemiGroup b, Eq b) => (a -> b) -> a -> a -> Bool
---isHomomorphic h x y = h x |+| h y == h (x |+| y)
-
-

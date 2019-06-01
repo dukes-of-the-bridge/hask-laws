@@ -21,7 +21,7 @@ instance SemiGroup [a] where
   (|+|) = (++)
   {-# INLINE (|+|) #-}
 
-instance SemiGroupLaws  where
+instance SemiGroupLaws where
   associativeSG xs ys zs =
         (xs |+| ys) |+| zs == xs |+| (ys |+| zs) &&
           xs |+| (ys |+| zs) == xs |+| ys |+| zs
