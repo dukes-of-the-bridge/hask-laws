@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstrainedClassMethods #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Algebra.Base where
 
@@ -85,3 +86,9 @@ class (Functor m) => Monad m where
   {-# INLINABLE bind #-}
   {-# INLINE (>>=) #-}
   {-# MINIMAL pure , bind  #-}
+
+class MonadLaws where
+  leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
+  rightId :: (Eq (m a), Monad m) => m a -> Bool
+  associativeM :: (Eq (m c), Monad m) => (a -> m b) -> (b -> m c) -> a -> Bool
+  {-# MINIMAL leftId, rightId, associativeM #-}
