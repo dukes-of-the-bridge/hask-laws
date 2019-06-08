@@ -3,7 +3,7 @@
 
 module Algebra.Base where
 
-import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
+import Prelude hiding (Semigroup, Monoid, Functor, Applicative, Monad, fmap, flatten)
 
 {-|
  given a set S
@@ -59,12 +59,40 @@ class Functor f where
 class FunctorLaws where
   mapId ::  (Eq (f a), Functor f) => f a -> Bool
   mapCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
-  {-# minimal mapId, mapCompose #-}
-  
+  {-# MINIMAL mapId, mapCompose #-}
+
+{-|
+  An applicative algebra describes the application to an effect
+  of a transformation issued from an effect of the same type
+
+  apply :: f (a -> b) -> f a -> f b
+
+  The laws are
+
+(pure f) |*| x = fmap f x
+pure id |*| v = v
+pure (.) |*| u |*| v |*| w = u <*> (v <*> w)
+pure f |*| pure x = pure (f x)
+u |*| pure y = pure ($ y) |*| u
+|-}
+class (Functor f) => Applicative f where
+  pure :: a -> f a
+  apply :: f (a -> b) -> f a -> f b
+  (|*|) :: f (a -> b) -> f a -> f b
+  (|$|) :: (a -> b) -> f a -> f b
+  (|*|) = apply
+  (|$|) = fmap
+  {-# INLINE (|*|) #-}
+  {-# INLINE (|$|) #-}
+  {-# MINIMAL pure, apply #-}
+
+class ApplicativeLaws where
+  applyMap :: (Eq (f a), Applicative f) => (a -> b) -> f a -> Bool
+  applyId :: (Eq (f a), Applicative f) => f a -> Bool
+  {-# MINIMAL applyMap, applyId #-}
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
   a Kleisli construct a -> m b
-  Monad laws are
 
   A Monad is an Algebra built on a Functor algebra equiped with a flatten function.
   The complete description of the effect propagation is being provided by a
@@ -76,16 +104,15 @@ class FunctorLaws where
 > bind (pure a) k == k a
 > pending :)
 -}
-class (Functor m) => Monad m where
+class (Functor m, Applicative m) => Monad m where
   bind :: m a -> (a -> m b) -> m b
   (>>=) :: m a -> (a -> m b) -> m b
   flatten :: m (m a) -> m a
-  pure :: a -> m a
   bind ma k = flatten . fmap k $ ma
   (>>=) = bind
   {-# INLINABLE bind #-}
   {-# INLINE (>>=) #-}
-  {-# MINIMAL pure , flatten  #-}
+  {-# MINIMAL flatten  #-}
 
 class MonadLaws where
   leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
