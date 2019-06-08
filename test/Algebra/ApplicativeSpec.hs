@@ -11,6 +11,7 @@ spec :: Spec
 spec = do
   spec_applyMap
   spec_applyId
+  spec_applyLifted
 
 spec_applyMap :: Spec
 spec_applyMap =
@@ -33,3 +34,14 @@ spec_applyId =
     it "should conserve id for Maybe " $
       property (applyId::Maybe Int -> Bool)
 
+spec_applyLifted :: Spec
+spec_applyLifted =
+  describe "lifted function" $ do
+    it "should be applied to list" $
+      property (let ps :: [Int -> String]
+                    ps = pure show
+                 in applyLifted ps)
+    it "should be applied to Maybe" $
+      property (let ps :: Maybe (Int -> String)
+                    ps = pure show
+                 in applyLifted ps)
