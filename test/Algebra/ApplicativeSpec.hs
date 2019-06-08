@@ -12,6 +12,7 @@ spec = do
   spec_applyMap
   spec_applyId
   spec_applyLifted
+  spec_applyComp
 
 spec_applyMap :: Spec
 spec_applyMap =
@@ -45,3 +46,19 @@ spec_applyLifted =
       property (let ps :: Maybe (Int -> String)
                     ps = pure show
                  in applyLifted ps)
+
+spec_applyComp :: Spec
+spec_applyComp =
+  describe "apply composition" $ do
+    it "should be lifted for lists" $
+      property (let f :: [Double -> Double]
+                    f = [sqrt]
+                    g :: [Double -> String]
+                    g = [show]
+                 in applyComp g f)
+    it "should be lifted for Maybe" $
+      property (let f :: Maybe (Double -> Double)
+                    f = Just sqrt
+                    g :: Maybe (Double -> String)
+                    g = Just show
+                 in applyComp g f)

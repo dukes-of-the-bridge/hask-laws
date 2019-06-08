@@ -91,7 +91,8 @@ class ApplicativeLaws where
   applyId :: (Eq (f a), Applicative f) => f a -> Bool
 --  conserveLift :: (Eq b, Applicative f) => (a -> f a) -> (a -> b) -> a ->  Bool
   applyLifted :: (Eq (f b), Applicative f) => f (a -> b) -> a -> Bool
-  {-# MINIMAL applyMap, applyId, applyLifted #-}
+  applyComp :: (Eq (f c), Applicative f) => f (b -> c) -> f (a -> b) -> f a -> Bool
+  {-# MINIMAL applyMap, applyId, applyLifted, applyComp #-}
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
   a Kleisli construct a -> m b

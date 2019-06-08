@@ -31,3 +31,4 @@ instance ApplicativeLaws where
   applyMap f fa =  pure f |*| fa == fmap f fa
   applyId fa = pure id |*| fa == fa
   applyLifted pf y = pf |*| pure y == pure ($ y) |*| pf
+  applyComp pg pf fa  = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
