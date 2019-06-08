@@ -87,7 +87,7 @@ class (Functor f) => Applicative f where
   {-# MINIMAL pure, apply #-}
 
 class ApplicativeLaws where
-  applyMap :: (Eq (f a), Applicative f) => (a -> b) -> f a -> Bool
+  applyMap :: (Eq (f b), Applicative f) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), Applicative f) => f a -> Bool
   {-# MINIMAL applyMap, applyId #-}
 {-|
