@@ -1,4 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE InstanceSigs #-}
+
 module Algebra.Applicative(Applicative(..), ApplicativeLaws(..)) where
 
 import Prelude hiding(Applicative(..), Functor(..), pure, (<*>), (<$>), fmap)
@@ -28,7 +30,8 @@ pure f |*| pure x = pure (f x)
 u |*| pure y = pure ($ y) |*| u
 |-}
 instance ApplicativeLaws where
-  applyMap f fa =  pure f |*| fa == fmap f fa
-  applyId fa = pure id |*| fa == fa
-  applyLifted pf y = pf |*| pure y == pure ($ y) |*| pf
-  applyComp pg pf fa  = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
+  applyMap f fa      = pure f  |*| fa == fmap f fa
+  applyId fa         = pure id |*| fa == fa
+  applyInter pf y    = pf |*| pure y  == pure ($ y) |*| pf
+  applyComp pg pf fa = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
+--  applyHomo f a = pure f |*| pure a == pure (f a)

@@ -41,11 +41,11 @@ spec_applyLifted =
     it "should be applied to list" $
       property (let ps :: [Int -> String]
                     ps = pure show
-                 in applyLifted ps)
+                 in applyInter ps)
     it "should be applied to Maybe" $
       property (let ps :: Maybe (Int -> String)
                     ps = pure show
-                 in applyLifted ps)
+                 in applyInter ps)
 
 spec_applyComp :: Spec
 spec_applyComp =

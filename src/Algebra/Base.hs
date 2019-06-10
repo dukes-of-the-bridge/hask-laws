@@ -4,6 +4,9 @@
 module Algebra.Base where
 
 import Prelude hiding (Semigroup, Monoid, Functor, Applicative, Monad, fmap, flatten)
+import Data.Typeable (Proxy)
+import Data.Proxy (KProxy)
+import Data.Kind (Type)
 
 {-|
  given a set S
@@ -30,7 +33,7 @@ class SemiGroupLaws where
 > ∃! e ∈ S , ∀ a ∈ S,  a ⊗ e = e ⊗ a = a
 
 The structure (S, ⊗, e) is a monoid.
-
+, Applicative f
   A Monoid is a 'SemiGroup'
 -}
 class (SemiGroup a) => Monoid a where
@@ -86,13 +89,13 @@ class (Functor f) => Applicative f where
   {-# INLINE (|$|) #-}
   {-# MINIMAL pure, apply #-}
 
-class ApplicativeLaws where
-  applyMap :: (Eq (f b), Applicative f) => (a -> b) -> f a -> Bool
-  applyId :: (Eq (f a), Applicative f) => f a -> Bool
---  conserveLift :: (Eq b, Applicative f) => (a -> f a) -> (a -> b) -> a ->  Bool
-  applyLifted :: (Eq (f b), Applicative f) => f (a -> b) -> a -> Bool
-  applyComp :: (Eq (f c), Applicative f) => f (b -> c) -> f (a -> b) -> f a -> Bool
-  {-# MINIMAL applyMap, applyId, applyLifted, applyComp #-}
+class ApplicativeLaws  where
+  applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
+  applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
+--  applyHomo :: (a -> b) -> a ->  Bool
+  applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
+  applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
+  {-# MINIMAL applyMap, applyId, applyInter, applyComp #-}
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
   a Kleisli construct a -> m b
