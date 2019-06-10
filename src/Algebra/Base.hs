@@ -1,9 +1,10 @@
 {-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE Rank2Types #-}
 
 module Algebra.Base where
 
-import Prelude hiding (Semigroup, Monoid, Functor, Applicative, Monad, fmap, flatten)
+import Prelude hiding (Semigroup, Monoid, Functor, Applicative, Monad, fmap, flatten, pure)
 import Data.Typeable (Proxy)
 import Data.Proxy (KProxy)
 import Data.Kind (Type)
@@ -89,13 +90,14 @@ class (Functor f) => Applicative f where
   {-# INLINE (|$|) #-}
   {-# MINIMAL pure, apply #-}
 
+
 class ApplicativeLaws  where
   applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
---  applyHomo :: (a -> b) -> a ->  Bool
+  applyHomo :: (Eq (f b), (Applicative f)) => (forall x. x -> f x) -> (a -> b) -> a ->  Bool
   applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
   applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
-  {-# MINIMAL applyMap, applyId, applyInter, applyComp #-}
+  {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
 {-|
   A Monad algebra describes the propagation of an effect thru the application of
   a Kleisli construct a -> m b

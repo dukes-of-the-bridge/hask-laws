@@ -1,3 +1,5 @@
+{-# LANGUAGE Rank2Types #-}
+
 module Algebra.ApplicativeSpec(spec) where
 
 import Prelude hiding(Applicative(..), Functor(..), pure, (<*>), (<$>), fmap)
@@ -10,9 +12,10 @@ import Test.QuickCheck
 spec :: Spec
 spec = do
   spec_applyMap
-  spec_applyId
-  spec_applyLifted
-  spec_applyComp
+  spec_Identity
+  spec_Interchange
+  spec_Composition
+  spec_Homorphism
 
 spec_applyMap :: Spec
 spec_applyMap =
@@ -27,16 +30,16 @@ spec_applyMap =
                  in applyMap s :: Maybe Int -> Bool)
 
 
-spec_applyId :: Spec
-spec_applyId =
+spec_Identity :: Spec
+spec_Identity =
   describe "apply Map" $ do
     it "should conserve id for lists" $
       property (applyId::[Int] -> Bool)
     it "should conserve id for Maybe " $
       property (applyId::Maybe Int -> Bool)
 
-spec_applyLifted :: Spec
-spec_applyLifted =
+spec_Interchange :: Spec
+spec_Interchange =
   describe "lifted function" $ do
     it "should be applied to list" $
       property (let ps :: [Int -> String]
@@ -47,8 +50,8 @@ spec_applyLifted =
                     ps = pure show
                  in applyInter ps)
 
-spec_applyComp :: Spec
-spec_applyComp =
+spec_Composition :: Spec
+spec_Composition =
   describe "apply composition" $ do
     it "should be lifted for lists" $
       property (let f :: [Double -> Double]
@@ -62,3 +65,14 @@ spec_applyComp =
                     g :: Maybe (Double -> String)
                     g = Just show
                  in applyComp g f)
+
+spec_Homorphism :: Spec
+spec_Homorphism = describe "apply" $ do
+  it "should be homomorphic for Lists" $
+    property (let p :: x -> [x]
+                  p = pure
+              in applyHomo p (show:: Int -> String))
+  it "should be homomorphic for Maybe" $
+    property (let p :: x -> Maybe x
+                  p = pure
+              in applyHomo p (show:: Int -> String))

@@ -1,5 +1,4 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE InstanceSigs #-}
 
 module Algebra.Applicative(Applicative(..), ApplicativeLaws(..)) where
 
@@ -34,4 +33,4 @@ instance ApplicativeLaws where
   applyId fa         = pure id |*| fa == fa
   applyInter pf y    = pf |*| pure y  == pure ($ y) |*| pf
   applyComp pg pf fa = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
---  applyHomo f a = pure f |*| pure a == pure (f a)
+  applyHomo p f a    = p f |*| p a == p (f a)
