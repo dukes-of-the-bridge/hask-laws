@@ -1,6 +1,6 @@
 {-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE Rank2Types #-}
+{-# LANGUAGE ExplicitForAll #-}
 
 module Algebra.Base where
 
@@ -94,14 +94,12 @@ class (Functor f) => Applicative f where
 class ApplicativeLaws  where
   applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
-  applyHomo :: (Eq (f b), (Applicative f)) => (forall x. x -> f x) -> (a -> b) -> a ->  Bool
+  applyHomo :: forall a b proxy f.(Eq (f b), Applicative f) => proxy f -> (a -> b) -> a -> Bool
   applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
   applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
   {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
-{-|
-  A Monad algebra describes the propagation of an effect thru the application of
-  a Kleisli construct a -> m b
 
+{-|
   A Monad is an Algebra built on a Functor algebra equiped with a flatten function.
   The complete description of the effect propagation is being provided by a
   bind function

@@ -1,4 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+
 
 module Algebra.Applicative(Applicative(..), ApplicativeLaws(..)) where
 
@@ -33,4 +35,8 @@ instance ApplicativeLaws where
   applyId fa         = pure id |*| fa == fa
   applyInter pf y    = pf |*| pure y  == pure ($ y) |*| pf
   applyComp pg pf fa = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
-  applyHomo p f a    = p f |*| p a == p (f a)
+  applyHomo          = homomorphism
+
+homomorphism :: forall a b proxy f.(Eq (f b), Applicative f) => proxy f -> (a -> b) -> a -> Bool
+homomorphism _ g x = (pure (g x) :: f b) == (pure g |*| (pure x :: f a))
+
