@@ -1,11 +1,10 @@
-{-# LANGUAGE Rank2Types #-}
-
 module Algebra.ApplicativeSpec(spec) where
 
 import Prelude hiding(Applicative(..), Functor(..), pure, (<*>), (<$>), fmap)
 import Algebra.Applicative(Applicative(..), ApplicativeLaws(..))
 import Algebra.Base(Applicative(..), ApplicativeLaws(..))
 import Algebra.Functor
+import Data.Proxy
 import Test.Hspec
 import Test.QuickCheck
 
@@ -69,10 +68,6 @@ spec_Composition =
 spec_Homorphism :: Spec
 spec_Homorphism = describe "apply" $ do
   it "should be homomorphic for Lists" $
-    property (let p :: x -> [x]
-                  p = pure
-              in applyHomo p (show:: Int -> String))
+    property (applyHomo (Proxy :: Proxy Maybe) (show:: Int -> String))
   it "should be homomorphic for Maybe" $
-    property (let p :: x -> Maybe x
-                  p = pure
-              in applyHomo p (show:: Int -> String))
+    property (applyHomo (Proxy :: Proxy []) (show:: Int -> String))
