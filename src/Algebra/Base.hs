@@ -94,7 +94,7 @@ class (Functor f) => Applicative f where
 class ApplicativeLaws  where
   applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
-  applyHomo :: forall a b proxy f.(Eq (f b), Applicative f) => proxy f -> (a -> b) -> a -> Bool
+  applyHomo :: forall a b f.(Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
   applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
   applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
   {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}

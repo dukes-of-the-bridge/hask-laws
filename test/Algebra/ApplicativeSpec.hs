@@ -67,7 +67,7 @@ spec_Composition =
 
 spec_Homorphism :: Spec
 spec_Homorphism = describe "apply" $ do
-  it "should be homomorphic for Lists" $
-    property (applyHomo (Proxy :: Proxy Maybe) (show:: Int -> String))
   it "should be homomorphic for Maybe" $
+    property (applyHomo (Proxy :: Proxy Maybe) (show:: Int -> String))
+  it "should be homomorphic for Lists" $
     property (applyHomo (Proxy :: Proxy []) (show:: Int -> String))

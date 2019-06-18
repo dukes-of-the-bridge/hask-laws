@@ -7,6 +7,7 @@ module Algebra.Applicative(Applicative(..), ApplicativeLaws(..)) where
 import Prelude hiding(Applicative(..), Functor(..), pure, (<*>), (<$>), fmap)
 import Algebra.Base(Functor(..), Applicative(..), ApplicativeLaws(..))
 import Algebra.Functor
+import Data.Typeable (Proxy)
 
 instance Applicative [] where
   pure a = [a]
@@ -37,6 +38,6 @@ instance ApplicativeLaws where
   applyComp pg pf fa = pure (.) |*| pg |*| pf |*| fa == pg |*| (pf |*| fa)
   applyHomo          = homomorphism
 
-homomorphism :: forall a b proxy f.(Eq (f b), Applicative f) => proxy f -> (a -> b) -> a -> Bool
+homomorphism :: forall a b f.(Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
 homomorphism _ g x = (pure (g x) :: f b) == (pure g |*| (pure x :: f a))
 
