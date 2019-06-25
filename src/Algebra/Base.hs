@@ -139,8 +139,6 @@ class BiFunctor f where
   {-# MINIMAL bimap | leftmap, rightmap #-}
 
 class BiFunctorLaws where
-  leftmapId ::  (Eq (f a a), BiFunctor f) => f a a -> Bool
-  leftmapCompose::(Eq (f c d), BiFunctor f) => (a -> b) -> (b -> c) -> f a d -> Bool
-  rightmapId ::  (Eq (f a a), BiFunctor f) => f a a -> Bool
-  rightmapCompose::(Eq (f a d), BiFunctor f) => (b -> c) -> (c -> d) -> f a b -> Bool
-  {-# minimal leftmapId, leftmapCompose, rightmapId, rightmapCompose #-}
+  bimapId ::  (Eq (f a b), BiFunctor f) => f a b -> Bool
+  bimapCompose::(Eq (f a'' b''), BiFunctor f) => (a -> a') -> (a' -> a'') -> (b -> b') -> (b' -> b'') -> f a b -> Bool
+  {-# minimal bimapId, bimapCompose #-}
