@@ -124,3 +124,23 @@ class MonadLaws where
   rightId :: (Eq (m a), Monad m) => m a -> Bool
   associativeM :: (Eq (m c), Monad m) => (a -> m b) -> (b -> m c) -> a -> Bool
   {-# MINIMAL leftId, rightId, associativeM #-}
+
+
+class BiFunctor f where
+  bimap    :: (a -> c) -> (b -> d) -> f a b -> f c d
+  leftmap  :: (a -> c) -> f a b -> f c b
+  rightmap :: (b -> d) -> f a b -> f a d
+  bimap g h = leftmap g . rightmap h
+  leftmap g = bimap g id
+  rightmap = bimap id
+  {-# INLINABLE bimap #-}
+  {-# INLINABLE leftmap #-}
+  {-# INLINABLE rightmap #-}
+  {-# MINIMAL bimap | leftmap, rightmap #-}
+
+class BiFunctorLaws where
+  leftmapId ::  (Eq (f a a), BiFunctor f) => f a a -> Bool
+  leftmapCompose::(Eq (f c d), BiFunctor f) => (a -> b) -> (b -> c) -> f a d -> Bool
+  rightmapId ::  (Eq (f a a), BiFunctor f) => f a a -> Bool
+  rightmapCompose::(Eq (f a d), BiFunctor f) => (b -> c) -> (c -> d) -> f a b -> Bool
+  {-# minimal leftmapId, leftmapCompose, rightmapId, rightmapCompose #-}
