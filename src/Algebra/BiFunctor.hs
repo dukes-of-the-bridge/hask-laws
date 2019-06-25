@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Algebra.BiFunctor where
+module Algebra.BiFunctor(BiFunctor(..), BiFunctorLaws(..)) where
 
 import Algebra.Base(BiFunctor(..), BiFunctorLaws(..))
 
