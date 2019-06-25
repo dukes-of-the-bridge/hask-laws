@@ -7,6 +7,9 @@ import Algebra.Base(BiFunctor(..), BiFunctorLaws(..))
 instance BiFunctor (,) where
   bimap g h (a, b) = (g a, h b)
 
+instance BiFunctor Either where
+  bimap g _ (Left a)  = Left  (g a)
+  bimap _ h (Right b) = Right (h b)
 
 instance BiFunctorLaws where
   bimapId fab              = bimap id id fab == fab
