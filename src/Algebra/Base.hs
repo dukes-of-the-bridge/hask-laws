@@ -125,7 +125,14 @@ class MonadLaws where
   associativeM :: (Eq (m c), Monad m) => (a -> m b) -> (b -> m c) -> a -> Bool
   {-# MINIMAL leftId, rightId, associativeM #-}
 
+{-|
+  A BiFunctor is a Functor which domain is a product of categories.
+  In the case of Haskell we only define EndoFunctor Algebras from Hask to Hask
+  BiFunctor laws are the same as for functor laws
 
+> fmap id id ==  id
+> fmap (f . g) (h . k)   ==  fmap (f . h) .  fmap (g . k)
+|-}
 class BiFunctor f where
   bimap    :: (a -> c) -> (b -> d) -> f a b -> f c d
   leftmap  :: (a -> c) -> f a b -> f c b
