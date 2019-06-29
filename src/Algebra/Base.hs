@@ -1,6 +1,6 @@
 {-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-
+{-# LANGUAGE ExplicitForAll #-}
 module Algebra.Base where
 
 import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
@@ -92,3 +92,31 @@ class MonadLaws where
   rightId :: (Eq (m a), Monad m) => m a -> Bool
   associativeM :: (Eq (m c), Monad m) => (a -> m b) -> (b -> m c) -> a -> Bool
   {-# MINIMAL leftId, rightId, associativeM #-}
+
+{-|
+  A pro functor is the archetype of the consumer/producer pattern
+  where a profunctor P A B will consume values of type A and produce
+  values of type B.
+  The @dimap@ operator is covariant on the type of the consumed value.
+
+  As for functors both the laws
+  - of conservation of id
+  - composition of arrows
+
+  must be verified
+|-}
+class ProFunctor p where
+  dimap :: (c -> a) -> (b -> d) -> p a b -> p c d
+  dimap f g = lmap f . rmap g
+  lmap :: (a -> b) -> p b c -> p a c
+  lmap f = dimap f id
+  rmap :: (b -> d) -> p a b -> p a d
+  rmap = dimap id
+  {-# INLINE dimap #-}
+  {-# INLINE lmap #-}
+  {-# INLINE rmap #-}
+  {-# MINIMAL dimap | (lmap, rmap)  #-}
+
+class ProFunctorLaws where
+  dimapId :: (Eq (p a b), ProFunctor p) => p a b -> Bool
+  dimapComp :: (ProFunctor p) => (a'' ->  a') -> (a' -> a) -> (b -> b') -> (b' -> b'') -> p a b -> Bool
