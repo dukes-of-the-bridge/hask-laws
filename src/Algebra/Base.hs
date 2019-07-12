@@ -65,9 +65,9 @@ class Functor f where
 
 
 class FunctorLaws where
-  {-# MINIMAL mapId, mapCompose #-}
-  mapId ::  (Eq (f a), Functor f) => f a -> Bool
-  mapCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
+  {-# MINIMAL preserveId, preserveCompose #-}
+  preserveId ::  (Eq (f a), Functor f) => f a -> Bool
+  preserveCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
 
 {-|
   An applicative algebra describes the application to an effect
@@ -159,6 +159,6 @@ class BiFunctor f where
 
 
 class BiFunctorLaws where
-  {-# minimal bimapId, bimapCompose #-}
-  bimapId ::  (Eq (f a b), BiFunctor f) => f a b -> Bool
-  bimapCompose::(Eq (f a'' b''), BiFunctor f) => (a -> a') -> (a' -> a'') -> (b -> b') -> (b' -> b'') -> f a b -> Bool
+  {-# minimal preserveIds, preserveComposes #-}
+  preserveIds ::  (Eq (f a b), BiFunctor f) => f a b -> Bool
+  preserveComposes::(Eq (f a'' b''), BiFunctor f) => (a -> a') -> (a' -> a'') -> (b -> b') -> (b' -> b'') -> f a b -> Bool

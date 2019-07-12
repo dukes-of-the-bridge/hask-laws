@@ -15,7 +15,7 @@ instance Functor Maybe where
   {-# INLINABLE fmap #-}
 
 instance FunctorLaws where
-  mapId fa = fmap id fa == id fa
-  mapCompose f g fa = fmap (g . f) fa == (fmap g . fmap f $ fa)
-  {-# INLINABLE mapId #-}
-  {-# INLINABLE mapCompose #-}
+  preserveId      fa     = fmap id fa == id fa
+  preserveCompose f g fa = fmap (g . f) fa == (fmap g . fmap f $ fa)
+  {-# INLINABLE preserveId #-}
+  {-# INLINABLE preserveCompose #-}

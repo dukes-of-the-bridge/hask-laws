@@ -13,9 +13,9 @@ spec = do
 spec_id :: Spec
 spec_id = describe "Bi Functor laws" $ do
   it "should preserve id in" $
-    property (bimapId :: (Int, String) -> Bool)
+    property (preserveId :: (Int, String) -> Bool)
   it "preserve id in" $
-    property (bimapId :: (Int, String) -> Bool)
+    property (preserveId :: (Int, String) -> Bool)
 
 
 spec_map :: Spec
