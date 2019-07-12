@@ -2,21 +2,18 @@
 
 module Algebra.Monad(Monad(..), MonadLaws(..)) where
 
-import Prelude hiding(Monad(..), Functor(..), pure)
-import Algebra.Base(Functor(..), Monad(..), MonadLaws(..))
+import Prelude hiding(Monad(..), Functor(..), Applicative(..), pure)
+import Algebra.Base(Functor(..), Applicative(..), Monad(..), MonadLaws(..))
 import Algebra.Functor
+import Algebra.Applicative
 
 instance Monad [] where
-  pure a    = [a]
   flatten   = foldr (++) []
-  {-# INLINABLE pure #-}
   {-# INLINABLE flatten #-}
 
 instance Monad Maybe where
-  pure = Just
   flatten (Just (Just a)) = Just a
   flatten _               = Nothing
-  {-# INLINE pure #-}
   {-# INLINABLE flatten #-}
 
 instance MonadLaws where

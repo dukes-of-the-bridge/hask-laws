@@ -3,7 +3,10 @@
 
 module Algebra.Base where
 
-import Prelude hiding (Semigroup, Monoid, Functor, Monad, fmap, flatten)
+import Prelude hiding (Semigroup, Monoid, Functor, Applicative, Monad, fmap, flatten, pure)
+import Data.Typeable (Proxy)
+import Data.Proxy (KProxy)
+import Data.Kind (Type)
 
 {-|
  given a set S
@@ -30,7 +33,7 @@ class SemiGroupLaws where
 > ∃! e ∈ S , ∀ a ∈ S,  a ⊗ e = e ⊗ a = a
 
 The structure (S, ⊗, e) is a monoid.
-
+, Applicative f
   A Monoid is a 'SemiGroup'
 -}
 class (SemiGroup a) => Monoid a where
@@ -59,13 +62,43 @@ class Functor f where
 class FunctorLaws where
   mapId ::  (Eq (f a), Functor f) => f a -> Bool
   mapCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
-  {-# minimal mapId, mapCompose #-}
-  
-{-|
-  A Monad algebra describes the propagation of an effect thru the application of
-  a Kleisli construct a -> m b
-  Monad laws are
+  {-# MINIMAL mapId, mapCompose #-}
 
+{-|
+  An applicative algebra describes the application to an effect
+  of a transformation issued from an effect of the same type
+
+  apply :: f (a -> b) -> f a -> f b
+
+  The laws are
+
+(pure f) |*| x = fmap f x
+pure id |*| v = v
+pure (.) |*| u |*| v |*| w = u <*> (v <*> w)
+pure f |*| pure x = pure (f x)
+u |*| pure y = pure ($ y) |*| u
+|-}
+class (Functor f) => Applicative f where
+  pure :: a -> f a
+  apply :: f (a -> b) -> f a -> f b
+  (|*|) :: f (a -> b) -> f a -> f b
+  (|*|) = apply
+  (|$|) :: (a -> b) -> f a -> f b
+  (|$|) = fmap
+  {-# INLINE (|*|) #-}
+  {-# INLINE (|$|) #-}
+  {-# MINIMAL pure, apply #-}
+
+
+class ApplicativeLaws  where
+  applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
+  applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
+  applyHomo :: (Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
+  applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
+  applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
+  {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
+
+{-|
   A Monad is an Algebra built on a Functor algebra equiped with a flatten function.
   The complete description of the effect propagation is being provided by a
   bind function
@@ -76,16 +109,15 @@ class FunctorLaws where
 > bind (pure a) k == k a
 > pending :)
 -}
-class (Functor m) => Monad m where
+class (Functor m, Applicative m) => Monad m where
   bind :: m a -> (a -> m b) -> m b
   (>>=) :: m a -> (a -> m b) -> m b
   flatten :: m (m a) -> m a
-  pure :: a -> m a
   bind ma k = flatten . fmap k $ ma
   (>>=) = bind
   {-# INLINABLE bind #-}
   {-# INLINE (>>=) #-}
-  {-# MINIMAL pure , flatten  #-}
+  {-# MINIMAL flatten  #-}
 
 class MonadLaws where
   leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
