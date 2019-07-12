@@ -129,7 +129,6 @@ class (Functor m, Applicative m) => Monad m where
   flatten :: m (m a) -> m a
 
 
-
 class MonadLaws where
   {-# MINIMAL leftId, rightId, associativeM #-}
   leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
@@ -145,7 +144,7 @@ class MonadLaws where
 > fmap (f . g) (h . k)   ==  fmap (f . h) .  fmap (g . k)
 |-}
 class BiFunctor f where
-  {-# MINIMAL bimap | leftmap, rightmap #-}
+  {-# MINIMAL bimap | (leftmap, rightmap) #-}
   bimap    :: (a -> c) -> (b -> d) -> f a b -> f c d
   bimap g h = leftmap g . rightmap h
   {-# INLINABLE bimap #-}
