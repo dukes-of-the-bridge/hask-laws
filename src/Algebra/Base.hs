@@ -1,6 +1,5 @@
 {-# LANGUAGE ConstrainedClassMethods #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE ExplicitForAll #-}
 
 module Algebra.Base where
 
@@ -83,8 +82,8 @@ class (Functor f) => Applicative f where
   pure :: a -> f a
   apply :: f (a -> b) -> f a -> f b
   (|*|) :: f (a -> b) -> f a -> f b
-  (|$|) :: (a -> b) -> f a -> f b
   (|*|) = apply
+  (|$|) :: (a -> b) -> f a -> f b
   (|$|) = fmap
   {-# INLINE (|*|) #-}
   {-# INLINE (|$|) #-}
@@ -94,7 +93,7 @@ class (Functor f) => Applicative f where
 class ApplicativeLaws  where
   applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
-  applyHomo :: forall a b f.(Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
+  applyHomo :: (Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
   applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
   applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
   {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
