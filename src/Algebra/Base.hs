@@ -18,12 +18,14 @@ import Data.Kind (Type)
  The structure (S, ⊗) is a semi-group.
 -}
 class SemiGroup a where
-  (|+|) :: a -> a -> a
   {-# MINIMAL (|+|) #-}
+  (|+|) :: a -> a -> a
+
 
 class SemiGroupLaws where
-  associativeSG :: (Eq a, SemiGroup a) => a -> a -> a -> Bool
   {-# MINIMAL associativeSG #-}
+  associativeSG :: (Eq a, SemiGroup a) => a -> a -> a -> Bool
+
 {-|
   given a set S
 
@@ -37,12 +39,13 @@ The structure (S, ⊗, e) is a monoid.
   A Monoid is a 'SemiGroup'
 -}
 class (SemiGroup a) => Monoid a where
-  zero :: a
   {-# MINIMAL zero #-}
+  zero :: a
+
 
 class MonoidLaws where
-  hasZero :: (Eq a, Monoid a) => a -> Bool
   {-# MINIMAL hasZero #-}
+  hasZero :: (Eq a, Monoid a) => a -> Bool
 
 {-|
   A functor algebra describes the preservation of the structure of an effect
@@ -54,15 +57,17 @@ class MonoidLaws where
 > fmap (f . g)  ==  fmap f . fmap g
 -}
 class Functor f where
-  fmap :: (a -> b) -> f a -> f b
-  lift :: (a -> b) -> f a -> f b
   {-# MINIMAL fmap #-}
+  fmap :: (a -> b) -> f a -> f b
+
+  lift :: (a -> b) -> f a -> f b
   lift = fmap
 
+
 class FunctorLaws where
+  {-# MINIMAL mapId, mapCompose #-}
   mapId ::  (Eq (f a), Functor f) => f a -> Bool
   mapCompose::(Eq (f c), Functor f) => (a -> b) -> (b -> c) -> f a -> Bool
-  {-# MINIMAL mapId, mapCompose #-}
 
 {-|
   An applicative algebra describes the application to an effect
@@ -79,24 +84,26 @@ pure f |*| pure x = pure (f x)
 u |*| pure y = pure ($ y) |*| u
 |-}
 class (Functor f) => Applicative f where
+  {-# MINIMAL pure, apply #-}
   pure :: a -> f a
   apply :: f (a -> b) -> f a -> f b
+
   (|*|) :: f (a -> b) -> f a -> f b
   (|*|) = apply
+  {-# INLINE (|*|) #-}
+
   (|$|) :: (a -> b) -> f a -> f b
   (|$|) = fmap
-  {-# INLINE (|*|) #-}
   {-# INLINE (|$|) #-}
-  {-# MINIMAL pure, apply #-}
 
 
 class ApplicativeLaws  where
+  {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
   applyMap :: (Eq (f b), (Applicative f)) => (a -> b) -> f a -> Bool
   applyId :: (Eq (f a), (Applicative f)) => f a -> Bool
   applyHomo :: (Eq (f b), Applicative f) => Proxy f -> (a -> b) -> a -> Bool
   applyInter :: (Eq (f b), (Applicative f)) => f (a -> b) -> a -> Bool
   applyComp :: (Eq (f c), (Applicative f)) => f (b -> c) -> f (a -> b) -> f a -> Bool
-  {-# MINIMAL applyMap, applyId, applyInter, applyComp, applyHomo #-}
 
 {-|
   A Monad is an Algebra built on a Functor algebra equiped with a flatten function.
@@ -110,20 +117,24 @@ class ApplicativeLaws  where
 > pending :)
 -}
 class (Functor m, Applicative m) => Monad m where
-  bind :: m a -> (a -> m b) -> m b
-  (>>=) :: m a -> (a -> m b) -> m b
-  flatten :: m (m a) -> m a
-  bind ma k = flatten . fmap k $ ma
-  (>>=) = bind
-  {-# INLINABLE bind #-}
-  {-# INLINE (>>=) #-}
   {-# MINIMAL flatten  #-}
+  bind :: m a -> (a -> m b) -> m b
+  bind ma k = flatten . fmap k $ ma
+  {-# INLINABLE bind #-}
+
+  (>>=) :: m a -> (a -> m b) -> m b
+  (>>=) = bind
+  {-# INLINE (>>=) #-}
+
+  flatten :: m (m a) -> m a
+
+
 
 class MonadLaws where
+  {-# MINIMAL leftId, rightId, associativeM #-}
   leftId :: (Eq (m b), Monad m) => (a -> m b) -> a -> Bool
   rightId :: (Eq (m a), Monad m) => m a -> Bool
   associativeM :: (Eq (m c), Monad m) => (a -> m b) -> (b -> m c) -> a -> Bool
-  {-# MINIMAL leftId, rightId, associativeM #-}
 
 {-|
   A BiFunctor is a Functor which domain is a product of categories.
@@ -134,18 +145,21 @@ class MonadLaws where
 > fmap (f . g) (h . k)   ==  fmap (f . h) .  fmap (g . k)
 |-}
 class BiFunctor f where
-  bimap    :: (a -> c) -> (b -> d) -> f a b -> f c d
-  leftmap  :: (a -> c) -> f a b -> f c b
-  rightmap :: (b -> d) -> f a b -> f a d
-  bimap g h = leftmap g . rightmap h
-  leftmap g = bimap g id
-  rightmap = bimap id
-  {-# INLINABLE bimap #-}
-  {-# INLINABLE leftmap #-}
-  {-# INLINABLE rightmap #-}
   {-# MINIMAL bimap | leftmap, rightmap #-}
+  bimap    :: (a -> c) -> (b -> d) -> f a b -> f c d
+  bimap g h = leftmap g . rightmap h
+  {-# INLINABLE bimap #-}
+
+  leftmap  :: (a -> c) -> f a b -> f c b
+  leftmap g = bimap g id
+  {-# INLINABLE leftmap #-}
+
+  rightmap :: (b -> d) -> f a b -> f a d
+  rightmap = bimap id
+  {-# INLINABLE rightmap #-}
+
 
 class BiFunctorLaws where
+  {-# minimal bimapId, bimapCompose #-}
   bimapId ::  (Eq (f a b), BiFunctor f) => f a b -> Bool
   bimapCompose::(Eq (f a'' b''), BiFunctor f) => (a -> a') -> (a' -> a'') -> (b -> b') -> (b' -> b'') -> f a b -> Bool
-  {-# minimal bimapId, bimapCompose #-}

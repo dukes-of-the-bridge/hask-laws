@@ -6,10 +6,14 @@ import Algebra.Base(BiFunctor(..), BiFunctorLaws(..))
 
 instance BiFunctor (,) where
   bimap g h (a, b) = (g a, h b)
+  {-# INLINE bimap #-}
+
 
 instance BiFunctor Either where
   bimap g _ (Left a)  = Left  (g a)
   bimap _ h (Right b) = Right (h b)
+  {-# INLINABLE bimap #-}
+
 
 instance BiFunctorLaws where
   bimapId fab              = bimap id id fab == fab
