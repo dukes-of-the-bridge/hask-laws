@@ -15,13 +15,13 @@ spec = do
 spec_map_id :: Spec
 spec_map_id  = describe "Functor Laws" $ do
    it "should preserve identity function for Lists" $
-     property (mapId :: [Int] -> Bool)
+     property (preserveId :: [Int] -> Bool)
    it "should preserve function for Maybe" $
-     property (mapId :: Maybe Int -> Bool)
+     property (preserveId :: Maybe Int -> Bool)
 
 spec_composition::Spec
 spec_composition = describe "Functor Laws" $ do
   it "should preserve composition for lists" $
-    property (mapCompose (7 *) show :: [Int] -> Bool)
+    property (preserveCompose (7 *) show :: [Int] -> Bool)
   it "should preserve composition for lists" $
-    property (mapCompose (7 *) show :: Maybe Int -> Bool)
+    property (preserveCompose (7 *) show :: Maybe Int -> Bool)
