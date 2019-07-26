@@ -3,8 +3,8 @@ module Algebra.ProFunctorSpec(spec) where
 
 import Test.Hspec
 import Test.QuickCheck
-import Algebra.Base(ProFunctor(..), ProFunctorLaws(..))
-import Algebra.ProFunctor(ProFunctor(..), ProFunctorLaws(..))
+import Algebra.Base(Profunctor(..), ProfunctorLaws(..))
+import Algebra.Profunctor(ProFunctor(..), ProFunctorLaws(..))
 
 
 spec :: Spec

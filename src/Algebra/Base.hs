@@ -105,18 +105,21 @@ class MonadLaws where
 
   must be verified
 |-}
-class ProFunctor p where
+class Profunctor p where
   dimap :: (c -> a) -> (b -> d) -> p a b -> p c d
   dimap f g = lmap f . rmap g
+  {-# INLINE dimap #-}
+
   lmap :: (a -> b) -> p b c -> p a c
   lmap f = dimap f id
+  {-# INLINE lmap #-}
+
   rmap :: (b -> d) -> p a b -> p a d
   rmap = dimap id
-  {-# INLINE dimap #-}
-  {-# INLINE lmap #-}
   {-# INLINE rmap #-}
+
   {-# MINIMAL dimap | (lmap, rmap)  #-}
 
-class ProFunctorLaws where
-  dimapId :: (Eq (p a b), ProFunctor p) => p a b -> Bool
-  dimapComp :: (ProFunctor p) => (a'' ->  a') -> (a' -> a) -> (b -> b') -> (b' -> b'') -> p a b -> Bool
+class ProfunctorLaws where
+  dimapId :: (Eq (p a b), Profunctor p) => p a b -> Bool
+  dimapComp :: (Eq (p a'' b''), Profunctor p) => (a'' ->  a') -> (a' -> a) -> (b -> b') -> (b' -> b'') -> p a b -> Bool
